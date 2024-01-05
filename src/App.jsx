@@ -1,9 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 function App() {
   const initialBoard = Array(9).fill(null);
   const [board, setBoard] = useState(initialBoard);
   const [xIsNext, setXIsNext] = useState(true);
+
+  // Handle Computer Move after render
+  useEffect(() => {
+    if (!xIsNext) {
+      const timeoutId = setTimeout(() => {
+        const computerMoveIndex = getComputerMove();
+        handleClick(computerMoveIndex);
+      }, 1000);
+
+      // Cleanup the timeout to avoid memory leaks
+      return () => clearTimeout(timeoutId);
+    }
+  }, [xIsNext, board]);
 
   const calculateWinner = () => {
     const lines = [
@@ -56,6 +69,17 @@ function App() {
   const status = winner
     ? `Winner: ${winner}`
     : `Next player: ${xIsNext ? 'X' : 'O'}`;
+
+  const getComputerMove = () => {
+    const availableMoves = [];
+    for (let i = 0; i < board.length; i++) {
+      if (!board[i]) {
+        availableMoves.push(i);
+      }
+    }
+    const randomIndex = Math.floor(Math.random() * availableMoves.length);
+    return availableMoves[randomIndex];
+  };
 
   return (
     <div className="bg-gray-200 h-screen flex flex-col items-center justify-center">
