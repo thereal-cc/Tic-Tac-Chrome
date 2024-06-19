@@ -37,6 +37,11 @@ function App() {
       }
     }
 
+    // Check for a tie
+    if (board.every((square) => square !== null)) {
+      return 'Tie';
+    }
+
     return null;
   };
 
@@ -65,10 +70,8 @@ function App() {
     </button>
   );
 
-  const winner = calculateWinner();
-  const status = winner
-    ? `Winner: ${winner}`
-    : `Next player: ${xIsNext ? 'X' : 'O'}`;
+  const winner = calculateWinner(); 
+  const status = winner === 'Tie' ? 'It\'s a Tie!' : winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'X' : 'O'}`;
 
   const getComputerMove = () => {
     const availableMoves = [];
